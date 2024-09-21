@@ -21,7 +21,7 @@ The project won **Third Prize** in the **India Automation Challenge** held as pa
 ### Technologies and Components Used
 - **Programming Language**: C++ 
 - **Development Environment**: Arduino IDE
-- **Communication**: SIM800A module for SMS alerts
+- **Communication**: SIM800A module for SMS alerts and GPS module to find the exact location of the fault
 - **Microcontroller**: Arduino and ESP32
 - **Sensors**: Current and Voltage sensors for real-time data monitoring
 - **Relays**: For controlling circuit connections
