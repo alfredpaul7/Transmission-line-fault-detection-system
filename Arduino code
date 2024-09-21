@@ -1,0 +1,83 @@
+
+#include <SoftwareSerial.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Pin Definitions
+#define CURRENT_SENSOR A0
+#define TX_PIN 2  // Arduino TX to NodeMCU RX
+#define RX_PIN 3  // Arduino RX to NodeMCU TX
+
+// Threshold
+#define CURRENT_THRESHOLD 0.5
+
+// LCD
+LiquidCrystal_I2C lcd(0x27, 16, 2); 
+
+// SIM800L
+SoftwareSerial sim800l(10, 11); // RX, TX for SIM800L
+
+// Variables
+float currentValue;
+String systemStatus;
+
+void setup() {
+  // Initialize serial communications
+  Serial.begin(9600);
+  sim800l.begin(9600);
+  lcd.begin();
+  lcd.backlight();
+  
+  // Setup for NodeMCU communication
+  pinMode(TX_PIN, OUTPUT);
+  pinMode(RX_PIN, INPUT);
+}
+
+void loop() {
+  // Read current sensor value
+  currentValue = analogRead(CURRENT_SENSOR) * (5.0 / 1023.0); // Adjust calculation based on your sensor
+  
+  // Check current status
+  if (currentValue < CURRENT_THRESHOLD) {
+    systemStatus = "FAULT";
+    sendSMS(); 
+    displayOnLCD("FAULT");
+  } else {
+    systemStatus = "GOOD";
+    displayOnLCD("NO FAULT");
+  }
+  
+  // Send data to NodeMCU
+  sendToNodeMCU(currentValue, systemStatus);
+  
+  delay(1000);
+}
+
+// Function to send SMS using SIM800L
+void sendSMS() {
+  sim800l.print("AT+CMGF=1\r"); 
+  delay(1000);
+  sim800l.print("AT+CMGS=\"+9176632982\"\r"); 
+  delay(1000);
+  sim800l.print("Fault in the system detected!"); 
+  delay(1000);
+  sim800l.write(26);
+  delay(1000);
+}
+
+// Function to display on LCD
+void displayOnLCD(String message) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Current: ");
+  lcd.print(currentValue);
+  lcd.setCursor(0, 1);
+  lcd.print(message);
+}
+
+// Function to send data to NodeMCU
+void sendToNodeMCU(float current, String status) {
+  Serial.print(current);
+  Serial.print(",");
+  Serial.println(status);
+}
