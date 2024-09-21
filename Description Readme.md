@@ -22,10 +22,10 @@ The project won **Third Prize** in the **India Automation Challenge** held as pa
 - **Programming Language**: C++ 
 - **Development Environment**: Arduino IDE
 - **Communication**: SIM800A module for SMS alerts and GPS module to find the exact location of the fault
-- **Microcontroller**: Arduino and ESP32
+- **Microcontroller**: Arduino and NODEMCU
 - **Sensors**: Current and Voltage sensors for real-time data monitoring
 - **Relays**: For controlling circuit connections
-- **IoT Integration**: ESP32 for real-time data communication
+- **IoT Integration**: NODEMCU for real-time data communication
 
 ### Components List
 - **Arduino Uno/ESP32**: Microcontrollers used for processing and IoT connectivity.
